@@ -67,6 +67,9 @@ set(SOURCES
 
     # Header files
     Aircraft.h
+    FlightLog.h
+    FlightLogEntry.h
+    FlightLogger.h
     FlightRoute.h
     GeoMapProvider.h
     Librarian.h
@@ -80,6 +83,9 @@ set(SOURCES
     Downloadable.cpp
     DownloadableGroup.cpp
     DownloadableGroupWatcher.cpp
+    FlightLog.cpp
+    FlightLogEntry.cpp
+    FlightLogger.cpp
     FlightRoute.cpp
     FlightRoute_GPX.cpp
     FlightRoute_Leg.cpp
