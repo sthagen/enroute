@@ -81,6 +81,22 @@ ApplicationWindow {
                 }
 
                 ItemDelegate {
+                    text: qsTr("Set Altimeter") + (satNav.hasAltitude ? `<br><font color="#606060" size="2">${satNav.altitudeInFeetAsString} AMSL</font>` : `<br><font color="#606060" size="2">`
+                                                                        + qsTr("Insufficient reception")+`</font>`)
+                    icon.source: "/icons/material/ic_speed.svg"
+                    icon.color: Material.primary
+                    Layout.fillWidth: true
+                    enabled: satNav.hasAltitude
+                    onClicked: {
+                        mobileAdaptor.vibrateBrief()
+                        drawer.close()
+                        dialogLoader.active = false
+                        dialogLoader.source = "dialogs/AltitudeCorrectionDialog.qml"
+                        dialogLoader.active = true
+                    }
+                }
+
+                ItemDelegate {
                     id: menuItemNearbyAirfields
 
                     text: qsTr("Nearby Airfields")
@@ -102,19 +118,19 @@ ApplicationWindow {
                     color: Material.primary
                 }
 
+
                 ItemDelegate {
-                    text: qsTr("Set Altimeter") + (satNav.hasAltitude ? `<br><font color="#606060" size="2">${satNav.altitudeInFeetAsString} AMSL</font>` : `<br><font color="#606060" size="2">`
-                                                                        + qsTr("Insufficient reception")+`</font>`)
-                    icon.source: "/icons/material/ic_speed.svg"
+                    id: menuItemFlightLog
+                    text: qsTr("Flight Log")
+                    icon.source: "/icons/material/ic_directions.svg"
                     icon.color: Material.primary
                     Layout.fillWidth: true
-                    enabled: satNav.hasAltitude
+
                     onClicked: {
                         mobileAdaptor.vibrateBrief()
+                        stackView.pop()
+                        stackView.push("pages/FlightLogPage.qml")
                         drawer.close()
-                        dialogLoader.active = false
-                        dialogLoader.source = "dialogs/AltitudeCorrectionDialog.qml"
-                        dialogLoader.active = true
                     }
                 }
 
