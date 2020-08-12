@@ -231,13 +231,17 @@ QString Librarian::getStringFromRessource(const QString &name) const
     }
     
     if (name == ":text/whatsnew.html") {
-        return tr(R"html(<p>Adrien Crovato and Heiner Tholen have joined the core development team. As a result of their efforts, there is now an option to use <strong>metric units</strong> for horizontal distances and speeds, and the <strong>Nearby</strong> page has been expanded. For pilots of very slow-flying aircrafts (such as paramotors) there is now a switch to <strong>set flight mode manually</strong>.</p>
+        return tr(R"html(<p>Adrien Crovato has implemented METRA/TAF access. Heiner Tholen has improved the map display.</p>)html");
+    }
 
-<p>Maps has been added for <strong>Argentina</strong> and <strong>Brazil</strong>. As usual, we provide weekly updates.</p>
+    if (name == ":text/weatherPermissions.html") {
+      return tr(R"html(<h3>Weather Permissions</h3>
+      
+<p>The weather feature implemented in <strong>Enroute Flight Navigation</strong> relies on data provided by the <a href https://www.aviationweather.gov/>Aviation Weather Center</a> U.S. service.</p>
+      
+<p>Using this feature will send your last-known location and your current route to a U.S. government website.</p>
 
-<p>Adrien Crovato, Markus Sachs and Szymon Kocur have translated the app to <strong>French</strong>, <strong>German</strong> and <strong>Polish</strong>.  If you prefer English, go to the <strong>Settings</strong> page where a language option has been added.</p>
-
-<p>Michael Horbaschk has kindly written a <strong>manual</strong> for the app.</p>)html");
+<p>Note that <strong>Enroute Flight Navigation</strong> is not responsible for any erroneous data that could be emitted by the Aviation Weather Center.</p>)html");
     }
 
     QFile file(name);

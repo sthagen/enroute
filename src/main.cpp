@@ -41,6 +41,7 @@
 #include "GlobalSettings.h"
 #include "Librarian.h"
 #include "MapManager.h"
+#include "Meteorologist.h"
 #include "MobileAdaptor.h"
 #include "SatNav.h"
 #include "ScaleQuickItem.h"
@@ -150,6 +151,10 @@ int main(int argc, char *argv[])
     // Attach flight route
     auto flightroute = new FlightRoute(aircraft, wind, engine);
     engine->rootContext()->setContextProperty("flightRoute", flightroute);
+
+    // Attach meteorologist
+    auto meteorologist = new Meteorologist(navEngine, flightroute, networkAccessManager, engine);
+    engine->rootContext()->setContextProperty("meteorologist", meteorologist);
 
     // Restore saved settings and make them available to QML
     QSettings settings;
