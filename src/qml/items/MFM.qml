@@ -350,11 +350,18 @@ Item {
         }
     }
 
+    NavBar {
+        id: navBar
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+    }
+
     Button {
         id: northButton
 
         anchors.horizontalCenter: zoomIn.horizontalCenter
-        anchors.top: parent.top
+        anchors.top: navBar.bottom
         anchors.topMargin: 0.5*Qt.application.font.pixelSize
 
         contentItem: ColumnLayout {
@@ -399,7 +406,7 @@ Item {
 
         anchors.left: parent.left
         anchors.leftMargin: 0.5*Qt.application.font.pixelSize
-        anchors.bottom: navBar.top
+        anchors.bottom: flightDisplay.top
         anchors.bottomMargin: 1.5*Qt.application.font.pixelSize
 
         onClicked: {
@@ -442,7 +449,7 @@ Item {
 
         anchors.right: parent.right
         anchors.rightMargin: 0.5*Qt.application.font.pixelSize
-        anchors.bottom: navBar.top
+        anchors.bottom: flightDisplay.top
         anchors.bottomMargin: 1.5*Qt.application.font.pixelSize
 
         contentItem: Label {
@@ -479,7 +486,7 @@ Item {
     Label {
         id: copyrightInfo
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: navBar.top
+        anchors.bottom: flightDisplay.top
         anchors.bottomMargin: 0.4*Qt.application.font.pixelSize
         text: geoMapProvider.copyrightNotice
         visible: width < parent.width
@@ -489,7 +496,7 @@ Item {
     Label {
         id: noCopyrightInfo
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: navBar.top
+        anchors.bottom: flightDisplay.top
         anchors.bottomMargin: 0.4*Qt.application.font.pixelSize
         text: "<a href='xx'>"+qsTr("Map Data Copyright Info")+"</a>"
         visible: !copyrightInfo.visible
@@ -503,8 +510,8 @@ Item {
         }
     }
 
-    NavBar {
-        id: navBar
+    FlightDisplay {
+        id: flightDisplay
 
         anchors.right: parent.right
         anchors.left: parent.left
