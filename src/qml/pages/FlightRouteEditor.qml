@@ -233,11 +233,19 @@ Page {
                             mobileAdaptor.vibrateBrief()
                             highlighted = false
                             parent.highlighted = false
-                            var errorString = mobileAdaptor.exportContent(flightRoute.toGeoJSON(), "applicatin/geo+json", flightRoute.suggestedFilename())
+                            var errorString = mobileAdaptor.exportContent(flightRoute.toGeoJSON(), "application/geo+json", flightRoute.suggestedFilename())
+                            if (errorString === "abort") {
+                                toast.doToast(qsTr("Aborted"))
+                                return
+                            }
                             if (errorString !== "") {
                                 shareErrorDialogLabel.text = errorString
                                 shareErrorDialog.open()
-                            } else
+                                return
+                            }
+                            if (Qt.platform.os === "android")
+                                toast.doToast(qsTr("Flight route shared"))
+                            else
                                 toast.doToast(qsTr("Flight route exported"))
                         }
                     }
@@ -250,10 +258,18 @@ Page {
                             highlighted = false
                             parent.highlighted = false
                             var errorString = mobileAdaptor.exportContent(flightRoute.toGpx(), "application/gpx+xml", flightRoute.suggestedFilename())
+                            if (errorString === "abort") {
+                                toast.doToast(qsTr("Aborted"))
+                                return
+                            }
                             if (errorString !== "") {
                                 shareErrorDialogLabel.text = errorString
                                 shareErrorDialog.open()
-                            } else
+                                return
+                            }
+                            if (Qt.platform.os === "android")
+                                toast.doToast(qsTr("Flight route shared"))
+                            else
                                 toast.doToast(qsTr("Flight route exported"))
                         }
                     }
