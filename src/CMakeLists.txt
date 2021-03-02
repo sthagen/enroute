@@ -90,12 +90,12 @@ set(SOURCES
     Navigation_Traffic.h
     ScaleQuickItem.h
     Waypoint.h
-    Weather_Decoder.h
-    Weather_DownloadManager.h
-    Weather_METAR.h
-    Weather_Station.h
-    Weather_TAF.h
-    Weather_Wind.h
+    weather/Decoder.h
+    weather/DownloadManager.h
+    weather/METAR.h
+    weather/Station.h
+    weather/TAF.h
+    weather/Wind.h
 
     # C++ files
     Aircraft.cpp
@@ -123,12 +123,12 @@ set(SOURCES
     TileHandler.cpp
     TileServer.cpp
     Waypoint.cpp
-    Weather_Decoder.cpp
-    Weather_DownloadManager.cpp
-    Weather_METAR.cpp
-    Weather_Station.cpp
-    Weather_TAF.cpp
-    Weather_Wind.cpp
+    weather/Decoder.cpp
+    weather/DownloadManager.cpp
+    weather/METAR.cpp
+    weather/Station.cpp
+    weather/TAF.cpp
+    weather/Wind.cpp
 
     ${HEADERS}
     )
@@ -213,7 +213,7 @@ if( ANDROID )
     add_library(${PROJECT_NAME} SHARED ${SOURCES} ${ANDROID_EXTRA_SOURCES})
 
     # Add libraries and include paths
-    target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::AndroidExtras Qt5::Core Qt5::Positioning Qt5::Quick Qt5::Sql Qt5::Svg qhttpengine sunset)
+    target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::AndroidExtras Qt5::Core Qt5::Positioning Qt5::Quick Qt5::Sql Qt5::Svg Microsoft.GSL::GSL qhttpengine sunset)
     target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/3rdParty/sunset/src)
 endif()
 
@@ -229,12 +229,12 @@ if (NOT ANDROID)
 
     # Add executable and libraries
     add_executable(${PROJECT_NAME} ${SOURCES})
-    target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Positioning Qt5::Quick Qt5::Sql Qt5::Svg qhttpengine kdsingleapplication sunset)
+    target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Positioning Qt5::Quick Qt5::Sql Qt5::Svg Microsoft.GSL::GSL qhttpengine kdsingleapplication sunset)
     target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/3rdParty/sunset/src)
-#    target_precompile_headers(${PROJECT_NAME} PRIVATE
-#        <QObject>
-#        <QPointer>
-#        )
+    target_precompile_headers(${PROJECT_NAME} PRIVATE
+        <QObject>
+        <QPointer>
+        )
 
     # Install
     install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})

@@ -24,7 +24,7 @@
 #include <QXmlStreamReader>
 
 #include "AviationUnits.h"
-#include "Weather_Decoder.h"
+#include "weather/Decoder.h"
 
 
 namespace Weather {
@@ -170,7 +170,7 @@ private:
     explicit TAF(QDataStream &inputStream, QObject *parent = nullptr);
 
     // Connects signals; this method is used internally from the constructor(s)
-    void setupSignals();
+    void setupSignals() const;
 
     // Writes the TAF report to a data stream
     void write(QDataStream &out);
