@@ -22,7 +22,7 @@
 #include <QQmlEngine>
 
 #include "FlightRoute.h"
-#include "GeoMapProvider.h"
+#include "geomaps/GeoMapProvider.h"
 
 
 auto FlightRoute::toGpx() const -> QByteArray
@@ -142,7 +142,7 @@ auto FlightRoute::gpxElements(const QString& indent, const QString& tag) const -
 }
 
 
-auto FlightRoute::loadFromGpx(const QString& fileName, GeoMapProvider *geoMapProvider) -> QString
+auto FlightRoute::loadFromGpx(const QString& fileName, GeoMaps::GeoMapProvider *geoMapProvider) -> QString
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -154,25 +154,25 @@ auto FlightRoute::loadFromGpx(const QString& fileName, GeoMapProvider *geoMapPro
 }
 
 
-auto FlightRoute::loadFromGpx(const QByteArray& data, GeoMapProvider *geoMapProvider) -> QString
+auto FlightRoute::loadFromGpx(const QByteArray& data, GeoMaps::GeoMapProvider *geoMapProvider) -> QString
 {
     QXmlStreamReader xml(data);
     return loadFromGpx(xml, geoMapProvider);
 }
 
 
-auto FlightRoute::loadFromGpx(QXmlStreamReader& xml, GeoMapProvider *geoMapProvider) -> QString
+auto FlightRoute::loadFromGpx(QXmlStreamReader& xml, GeoMaps::GeoMapProvider *geoMapProvider) -> QString
 {
 
     // collect all route points and track points and waypoints
     //
-    QList<Waypoint*> rtept;
-    QList<Waypoint*> trkpt;
-    QList<Waypoint*> wpt;
+    QList<GeoMaps::Waypoint*> rtept;
+    QList<GeoMaps::Waypoint*> trkpt;
+    QList<GeoMaps::Waypoint*> wpt;
 
     // lambda function to read a single gpx rtept, trkpt or wpt
     //
-    auto addPoint = [&] (const QString& tag, QList<Waypoint*> &target) {
+    auto addPoint = [&] (const QString& tag, QList<GeoMaps::Waypoint*> &target) {
 
         // capture rtept, trkpt or wpt
 
@@ -249,14 +249,14 @@ auto FlightRoute::loadFromGpx(QXmlStreamReader& xml, GeoMapProvider *geoMapProvi
         }
 
         // Now create a waypoint, owned by this, and set its name
-        Waypoint *wpt = nullptr;
+        GeoMaps::Waypoint *wpt = nullptr;
         if (nearest == nullptr) {
-            wpt = new Waypoint(pos, this);
+            wpt = new GeoMaps::Waypoint(pos, this);
         } else {
-            wpt = new Waypoint(*qobject_cast<Waypoint*>(nearest), this);
+            wpt = new GeoMaps::Waypoint(*qobject_cast<GeoMaps::Waypoint*>(nearest), this);
         }
         QQmlEngine::setObjectOwnership(wpt, QQmlEngine::CppOwnership);
-        connect(wpt, &Waypoint::extendedNameChanged, this, &FlightRoute::waypointsChanged);
+        connect(wpt, &GeoMaps::Waypoint::extendedNameChanged, this, &FlightRoute::waypointsChanged);
 
         if (wpt->getPropery("TYP") == "WP" && wpt->getPropery("CAT") == "WP" && name.length() > 0) {
             wpt->setExtendedName(name);
@@ -289,7 +289,7 @@ auto FlightRoute::loadFromGpx(QXmlStreamReader& xml, GeoMapProvider *geoMapProvi
     // this is a bit arbitrary but seems reasonable to me.
     // Could be made configurable.
     //
-    QList<Waypoint*> &source = (rtept.length() > 0) ? rtept :
+    QList<GeoMaps::Waypoint*> &source = (rtept.length() > 0) ? rtept :
                                                       (trkpt.length() > 0) ? trkpt :
                                                                              wpt;
     if (source.length() == 0) {
@@ -302,7 +302,7 @@ auto FlightRoute::loadFromGpx(QXmlStreamReader& xml, GeoMapProvider *geoMapProvi
     // make a deep copy
     //
     for(auto & wp : source) {
-        _waypoints.append(new Waypoint(*wp, this));
+        _waypoints.append(new GeoMaps::Waypoint(*wp, this));
     }
 
     qDeleteAll(rtept);

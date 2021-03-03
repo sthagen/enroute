@@ -25,6 +25,8 @@
 #include "Downloadable.h"
 
 
+namespace GeoMaps {
+
 /*! \brief Watches a group of Downloadable objects
   
   This convenience class collects signals and properties from a set of
@@ -146,7 +148,7 @@ public slots:
 
 signals:
     /*! \brief Notifier signal for property downloading */
-    void downloadablesWithFileChanged(QVector<QPointer<Downloadable>>);
+    void downloadablesWithFileChanged(QVector<QPointer<GeoMaps::Downloadable>>);
 
     /*! \brief Notifier signal for property downloading */
     void downloadingChanged(bool);
@@ -214,4 +216,6 @@ private:
     bool                          _cachedHasFile {false};            // Cached value for the 'hasLocalFile' property
     bool                          _cachedUpdatable {false};          // Cached value for the 'updatable' property
     QString                       _cachedUpdateSize {};              // Cached value for the 'updateSize' property
+};
+
 };

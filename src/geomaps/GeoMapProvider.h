@@ -45,6 +45,8 @@ class DownloadManager;
 }
 
 
+namespace GeoMaps {
+
 /*! \brief Serves GeoMaps, as MBTiles via an embedded HTTP server, and as GeoJSON
  *
  * This class works closely with MapManager.  It reads the files managed by
@@ -145,7 +147,7 @@ public:
      *
      * @returns Pointer to a newly created waypoint object
      */
-    Q_INVOKABLE static Waypoint* createWaypoint() ;
+    Q_INVOKABLE static GeoMaps::Waypoint* createWaypoint() ;
 
     /*! \brief Describe installed map
      *
@@ -315,4 +317,6 @@ private:
     QByteArray       _combinedGeoJSON_; // Cache: GeoJSON
     QVector<QPointer<Waypoint>> _waypoints_;       // Cache: Waypoints
     QVector<QPointer<Airspace>> _airspaces_;       // Cache: Airspaces
+};
+
 };

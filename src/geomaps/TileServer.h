@@ -26,6 +26,8 @@
 #include <QPointer>
 
 
+namespace GeoMaps {
+
 /*! \brief HTTP server for mapbox' MBTiles files
   
   This class features an HTTP server that is able to serve MBTiles, for use in
@@ -104,7 +106,7 @@ public slots:
      
     @param baseName The path under which the tiles willconst be available.
   */
-  void addMbtilesFileSet(const QVector<QPointer<Downloadable>>& baseMapsWithFiles, const QString& baseName);
+  void addMbtilesFileSet(const QVector<QPointer<GeoMaps::Downloadable>>& baseMapsWithFiles, const QString& baseName);
 
   /*! \brief Removes a set of tile files
    
@@ -122,4 +124,6 @@ private:
   QMap<QString,QVector<QPointer<Downloadable>>> mbtileFileNameSets;
   
   QUrl _baseUrl;
+};
+
 };

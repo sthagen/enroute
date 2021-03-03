@@ -29,12 +29,15 @@
 
 #include "Aircraft.h"
 
-#include "Waypoint.h"
+#include "geomaps/Waypoint.h"
 #include "weather/Wind.h"
 
+namespace GeoMaps {
 class GeoMapProvider;
-class GlobalSettings;
 class Waypoint;
+}
+
+class GlobalSettings;
 
 /*! \brief Intended flight route
  *
@@ -116,7 +119,7 @@ public:
      *
      *  @returns True if route is emptry or if other waypoint is not near the current end of the route.
      */
-    Q_INVOKABLE bool canAppend(Waypoint *other) const;
+    Q_INVOKABLE bool canAppend(GeoMaps::Waypoint *other) const;
 
     /*! \brief Returns true if waypoint is in this route
      *
@@ -148,7 +151,7 @@ public:
      * @returns Empty string in case of success, human-readable, translated
      * error message otherwise.
      */
-    Q_INVOKABLE QString loadFromGpx(const QString& fileName, GeoMapProvider *geoMapProvider);
+    Q_INVOKABLE QString loadFromGpx(const QString& fileName, GeoMaps::GeoMapProvider *geoMapProvider);
 
     /*! \brief Loads the route from a GPX document
      *
@@ -161,7 +164,7 @@ public:
      * @returns Empty string in case of success, human-readable, translated
      * error message otherwise.
      */
-    QString loadFromGpx(const QByteArray& data, GeoMapProvider *geoMapProvider);
+    QString loadFromGpx(const QByteArray& data, GeoMaps::GeoMapProvider *geoMapProvider);
 
     /*! \brief Loads the route from a GPX document
      *
@@ -174,7 +177,7 @@ public:
      * @returns Empty string in case of success, human-readable, translated
      * error message otherwise.
      */
-    QString loadFromGpx(QXmlStreamReader& xml, GeoMapProvider *geoMapProvider);
+    QString loadFromGpx(QXmlStreamReader& xml, GeoMaps::GeoMapProvider *geoMapProvider);
 
     /*! \brief Saves flight route to a file
      *
@@ -389,7 +392,7 @@ private:
     // "/flight route.geojson"
     QString stdFileName;
 
-    QVector<QPointer<Waypoint>> _waypoints;
+    QVector<QPointer<GeoMaps::Waypoint>> _waypoints;
 
     QVector<Leg*> _legs;
 

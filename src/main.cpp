@@ -38,10 +38,10 @@
 #include "Aircraft.h"
 #include "Clock.h"
 #include "FlightRoute.h"
-#include "GeoMapProvider.h"
+#include "geomaps/GeoMapProvider.h"
+#include "geomaps/MapManager.h"
 #include "GlobalSettings.h"
 #include "Librarian.h"
-#include "MapManager.h"
 #include "MobileAdaptor.h"
 #include "Navigation_FLARMAdaptor.h"
 #include "Navigation_SatNav.h"
@@ -60,12 +60,12 @@ auto main(int argc, char *argv[]) -> int
 
     // Register types
     qRegisterMetaType<MobileAdaptor::FileFunction>("MobileAdaptor::FileFunction");
-    qmlRegisterType<Airspace>("enroute", 1, 0, "Airspace");
+    qmlRegisterType<GeoMaps::Airspace>("enroute", 1, 0, "Airspace");
 
     qmlRegisterType<Clock>("enroute", 1, 0, "Clock");
-    qmlRegisterType<DownloadableGroup>("enroute", 1, 0, "DownloadableGroup");
-    qmlRegisterType<DownloadableGroupWatcher>("enroute", 1, 0, "DownloadableGroupWatcher");
-    qmlRegisterUncreatableType<GeoMapProvider>("enroute", 1, 0, "GeoMapProvider", "GeoMapProvider objects cannot be created in QML");
+    qmlRegisterType<GeoMaps::DownloadableGroup>("enroute", 1, 0, "DownloadableGroup");
+    qmlRegisterType<GeoMaps::DownloadableGroupWatcher>("enroute", 1, 0, "DownloadableGroupWatcher");
+    qmlRegisterUncreatableType<GeoMaps::GeoMapProvider>("enroute", 1, 0, "GeoMapProvider", "GeoMapProvider objects cannot be created in QML");
     qmlRegisterType<GlobalSettings>("enroute", 1, 0, "GlobalSettings");
     qmlRegisterUncreatableType<MobileAdaptor>("enroute", 1, 0, "MobileAdaptor", "MobileAdaptor objects cannot be created in QML");
     qmlRegisterUncreatableType<Navigation::FLARMAdaptor>("enroute", 1, 0, "FLARMAdaptor", "FLARMAdaptor objects cannot be created in QML");
@@ -74,7 +74,7 @@ auto main(int argc, char *argv[]) -> int
     qmlRegisterType<ScaleQuickItem>("enroute", 1, 0, "Scale");
     qmlRegisterUncreatableType<Weather::DownloadManager>("enroute", 1, 0, "WeatherDownloadManager", "Weather::DownloadManager objects cannot be created in QML");
     qmlRegisterType<Weather::Station>("enroute", 1, 0, "WeatherStation");
-    qmlRegisterType<Waypoint>("enroute", 1, 0, "Waypoint");
+    qmlRegisterType<GeoMaps::Waypoint>("enroute", 1, 0, "Waypoint");
 
     // Set up application
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -168,12 +168,12 @@ auto main(int argc, char *argv[]) -> int
     networkAccessManager->setTransferTimeout();
 
     // Attach map manager
-    auto *mapManager = new MapManager(networkAccessManager);
+    auto *mapManager = new GeoMaps::MapManager(networkAccessManager);
     engine->rootContext()->setContextProperty("mapManager", mapManager);
-    QObject::connect(mapManager->geoMaps(), &DownloadableGroup::downloadingChanged, MobileAdaptor::globalInstance(), &MobileAdaptor::showDownloadNotification);
+    QObject::connect(mapManager->geoMaps(), &GeoMaps::DownloadableGroup::downloadingChanged, MobileAdaptor::globalInstance(), &MobileAdaptor::showDownloadNotification);
 
     // Attach geo map provider
-    auto *geoMapProvider = new GeoMapProvider(mapManager, librarian);
+    auto *geoMapProvider = new GeoMaps::GeoMapProvider(mapManager, librarian);
     engine->rootContext()->setContextProperty("geoMapProvider", geoMapProvider);
 
     // Attach Weather::DownloadManager
