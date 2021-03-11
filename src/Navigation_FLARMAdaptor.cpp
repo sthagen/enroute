@@ -133,6 +133,7 @@ Navigation::FLARMAdaptor::FLARMAdaptor(QObject *parent) : QObject(parent) {
 
     // Uncomment one of the lines below to start this class in simulation mode.
     QString simulatorFileName;
+//    simulatorFileName = "/home/kebekus/Software/standards/FLARM/helluva_lot_aircraft.txt";
 //    simulatorFileName = "/home/kebekus/Software/standards/FLARM/expiry-hard.txt";
 //    simulatorFileName = "/home/kebekus/Software/standards/FLARM/expiry-soft.txt";
 //    simulatorFileName = "/home/kebekus/Software/standards/FLARM/many_opponents.txt";
@@ -167,6 +168,7 @@ void Navigation::FLARMAdaptor::connectToTrafficReceiver()
 
     socket->abort();
     socket->connectToHost(QStringLiteral("192.168.1.1"), 2000);
+    textStream.setDevice(socket);
 
     // Update properties
     setErrorString(QString());
@@ -391,9 +393,24 @@ void Navigation::FLARMAdaptor::processFLARMMessage(QString msg)
         if (targetType == u"C") {
             type = Navigation::Traffic::Airship;
         }
+        if (targetType == u"D") {
+            type = Navigation::Traffic::Drone;
+        }
         if (targetType == u"F") {
             type = Navigation::Traffic::StaticObstacle;
         }
+
+
+        // Ground speed it optimal. If ground speed is zero that means:
+        // target is on the ground. Ignore these targets, unless they are known static obstacles!
+        auto groundSpeedInMPS = arguments[8].toDouble(&ok);
+        if (!ok) {
+            groundSpeedInMPS = qQNaN();
+        }
+        if ((groundSpeedInMPS == 0.0) && (type != Navigation::Traffic::StaticObstacle)) {
+            return;
+        }
+
 
         // Target ID is optional
         auto targetID = arguments[5];
@@ -415,13 +432,13 @@ void Navigation::FLARMAdaptor::processFLARMMessage(QString msg)
                 vDist = AviationUnits::Distance::fromM(qQNaN());
             } else {
                 // We ignore targets with large vertical distance
-                if (vDist.toM() > 500) {
+                if (qAbs(vDist.toM()) > 1500) {
                     return;
                 }
             }
 
             auto trafficNP = Navigation::Traffic(this);
-            trafficNP.setData(alarmLevel, targetID, hDist, vDist, AviationUnits::Speed::fromKMH(climbRateInMPS), type, QGeoPositionInfo(QGeoCoordinate(), QDateTime::currentDateTimeUtc()));
+            trafficNP.setData(alarmLevel, targetID, hDist, vDist, AviationUnits::Speed::fromMPS(groundSpeedInMPS), AviationUnits::Speed::fromMPS(climbRateInMPS), type, QGeoPositionInfo(QGeoCoordinate(), QDateTime::currentDateTimeUtc()));
             if ((trafficNP.ID() == _trafficObjectWithoutPosition->ID()) || trafficNP.hasHigherPriorityThan(*_trafficObjectWithoutPosition)) {
                 _trafficObjectWithoutPosition->copyFrom(trafficNP);
             }
@@ -470,7 +487,7 @@ void Navigation::FLARMAdaptor::processFLARMMessage(QString msg)
         // Construct a traffic object
         auto traffic = Navigation::Traffic(this);
 
-        traffic.setData(alarmLevel, targetID, hDist, AviationUnits::Distance::fromM(vDistInM), AviationUnits::Speed::fromMPS(climbRateInMPS), type, pInfo);
+        traffic.setData(alarmLevel, targetID, hDist, AviationUnits::Distance::fromM(vDistInM), AviationUnits::Speed::fromMPS(groundSpeedInMPS), AviationUnits::Speed::fromMPS(climbRateInMPS), type, pInfo);
 
         foreach(auto target, _trafficObjects)
             if (targetID == target->ID()) {
@@ -726,8 +743,10 @@ void Navigation::FLARMAdaptor::readFromSimulatorStream()
 
 void Navigation::FLARMAdaptor::readFromStream()
 {
-    auto sentence = textStream.readLine();
-    processFLARMMessage(sentence);
+    QString sentence;
+    while( textStream.readLineInto(&sentence) ) {
+        processFLARMMessage(sentence);
+    }
 }
 
 
@@ -873,4 +892,10 @@ void Navigation::FLARMAdaptor::updateStatus()
     }
     _status = newStatus;
     emit statusChanged(_status);
+
+    // Acquire or release WiFi lock as appropriate
+    auto* mobileAdaptor = MobileAdaptor::globalInstance();
+    if (mobileAdaptor != nullptr) {
+        mobileAdaptor->lockWifi(_status == Receiving);
+    }
 }

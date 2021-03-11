@@ -49,7 +49,7 @@ void FlightRoute::append(QObject *waypoint)
     if (waypoint == nullptr) {
         return;
     }
-    if (!waypoint->inherits("Waypoint")) {
+    if (!waypoint->inherits("GeoMaps::Waypoint")) {
         return;
     }
 
@@ -123,7 +123,7 @@ auto FlightRoute::contains(QObject * waypoint) const -> bool
     if (waypoint == nullptr) {
         return false;
     }
-    if (!waypoint->inherits("Waypoint")) {
+    if (!waypoint->inherits("GeoMaps::Waypoint")) {
         return false;
     }
 
@@ -313,7 +313,7 @@ void FlightRoute::moveDown(QObject *waypoint)
     if (waypoint == nullptr) {
         return;
     }
-    if (!waypoint->inherits("Waypoint")) {
+    if (!waypoint->inherits("GeoMaps::Waypoint")) {
         return;
     }
     if (waypoint == lastWaypointObject()) {
@@ -336,7 +336,7 @@ void FlightRoute::moveUp(QObject *waypoint)
     if (waypoint == nullptr) {
         return;
     }
-    if (!waypoint->inherits("Waypoint")) {
+    if (!waypoint->inherits("GeoMaps::Waypoint")) {
         return;
     }
     if (waypoint == firstWaypointObject()) {
@@ -361,7 +361,7 @@ void FlightRoute::removeWaypoint(QObject *waypoint)
     if (waypoint == nullptr) {
         return;
     }
-    if (!waypoint->inherits("Waypoint")) {
+    if (!waypoint->inherits("GeoMaps::Waypoint")) {
         return;
     }
 

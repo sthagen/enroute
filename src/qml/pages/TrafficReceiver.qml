@@ -175,7 +175,7 @@ Page {
 
                 text:   {
                     if (flarmAdaptor.status == FLARMAdaptor.Disconnected)
-                        return ("
+                        return qsTr("
 <h3>How to connect your device to the traffic receiver</h3>
 
 <ul style=\"margin-left:-25px;\">
@@ -185,8 +185,8 @@ Page {
 </ul>
 ")
                     if (flarmAdaptor.status == FLARMAdaptor.Connecting)
-                        return ("
-<p><strong>Enroute Flight Navigation</strong> is trying to connect to the traffic receiver's data stream. If no connection has been established after a few seconds, something has gone wrong.</p>
+                        return qsTr("
+<p><strong>Enroute Flight Navigation</strong> is trying to connect to the traffic receiver's data stream. If no connection has been established after a few seconds, somthing has gone wrong.</p>
 
 <ul style=\"margin-left:-25px;\">
 <li>Make sure that your device has entered the WLAN network deployed by your traffic receiver.  If not, then use the button at the bottem of the screen to abort the connection attempt.</li>
@@ -194,15 +194,15 @@ Page {
 </ul>
 ")
                     if (flarmAdaptor.status == FLARMAdaptor.Connected)
-                        return ("
-<p><strong>Enroute Flight Navigation</strong> is now set up to receive traffic data. If no data arrives after a few seconds, something has gone wrong.</p>
+                        return qsTr("
+<p><strong>Enroute Flight Navigation</strong> is now set up to receive traffic data. If no data arrives after a few seconds, somthing has gone wrong.</p>
 
 <ul style=\"margin-left:-25px;\">
 <li>Make sure that the device at the IP address 192.168.1.1 is indeed a traffic receiver.</li>
 <li>Some traffic receivers protect the data stream with an additional password. This is currently not supported.</li>
 </ul>
 ")
-                    return ("
+                    return qsTr("
 <p>Well done! Go flying. Give yourself a pat on the back.</p>")
                 }
 
